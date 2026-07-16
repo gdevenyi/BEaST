@@ -53,8 +53,14 @@ jobs:
         run: |
           set -euxo pipefail
           for dep in $DEPS; do
-            git clone --depth 1 -b develop-1.9.18 "https://github.com/BIC-MNI/$dep.git" "dep-$dep" \
-              || git clone --depth 1 "https://github.com/BIC-MNI/$dep.git" "dep-$dep"
+            if [ "$dep" = libminc ]; then
+              # TEMPORARY (ci validation): libminc with installed-config fixes
+              # pending https://github.com/BIC-MNI/libminc/pull/150
+              git clone --depth 1 -b ci-modernize "https://github.com/gdevenyi/libminc.git" "dep-$dep"
+            else
+              git clone --depth 1 -b develop-1.9.18 "https://github.com/BIC-MNI/$dep.git" "dep-$dep" \
+                || git clone --depth 1 "https://github.com/BIC-MNI/$dep.git" "dep-$dep"
+            fi
             cmake -B "dep-$dep/build" -S "dep-$dep" \
               -DCMAKE_C_COMPILER_LAUNCHER=ccache \
               -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -85,6 +91,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="$PWD/install" \
             -DCMAKE_PREFIX_PATH="$DEPS_PREFIX" \
             -DBUILD_TESTING=ON \
+            -DUSE_NIFTI=OFF \
             $DEP_DIR_FLAGS
           cmake --build build -j"$(nproc)"
           cmake --install build
@@ -120,8 +127,14 @@ jobs:
         run: |
           set -euxo pipefail
           for dep in $DEPS; do
-            git clone --depth 1 -b develop-1.9.18 "https://github.com/BIC-MNI/$dep.git" "dep-$dep" \
-              || git clone --depth 1 "https://github.com/BIC-MNI/$dep.git" "dep-$dep"
+            if [ "$dep" = libminc ]; then
+              # TEMPORARY (ci validation): libminc with installed-config fixes
+              # pending https://github.com/BIC-MNI/libminc/pull/150
+              git clone --depth 1 -b ci-modernize "https://github.com/gdevenyi/libminc.git" "dep-$dep"
+            else
+              git clone --depth 1 -b develop-1.9.18 "https://github.com/BIC-MNI/$dep.git" "dep-$dep" \
+                || git clone --depth 1 "https://github.com/BIC-MNI/$dep.git" "dep-$dep"
+            fi
             cmake -B "dep-$dep/build" -S "dep-$dep" \
               -DCMAKE_C_COMPILER_LAUNCHER=ccache \
               -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -152,6 +165,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="$PWD/install" \
             -DCMAKE_PREFIX_PATH="$DEPS_PREFIX" \
             -DBUILD_TESTING=ON \
+            -DUSE_NIFTI=OFF \
             $DEP_DIR_FLAGS
           cmake --build build -j"$(nproc)"
           cmake --install build
@@ -180,8 +194,14 @@ jobs:
         run: |
           set -euxo pipefail
           for dep in $DEPS; do
-            git clone --depth 1 -b develop-1.9.18 "https://github.com/BIC-MNI/$dep.git" "dep-$dep" \
-              || git clone --depth 1 "https://github.com/BIC-MNI/$dep.git" "dep-$dep"
+            if [ "$dep" = libminc ]; then
+              # TEMPORARY (ci validation): libminc with installed-config fixes
+              # pending https://github.com/BIC-MNI/libminc/pull/150
+              git clone --depth 1 -b ci-modernize "https://github.com/gdevenyi/libminc.git" "dep-$dep"
+            else
+              git clone --depth 1 -b develop-1.9.18 "https://github.com/BIC-MNI/$dep.git" "dep-$dep" \
+                || git clone --depth 1 "https://github.com/BIC-MNI/$dep.git" "dep-$dep"
+            fi
             cmake -B "dep-$dep/build" -S "dep-$dep" \
               -DCMAKE_C_COMPILER_LAUNCHER=ccache \
               -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -212,6 +232,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="$PWD/install" \
             -DCMAKE_PREFIX_PATH="$DEPS_PREFIX" \
             -DBUILD_TESTING=ON \
+            -DUSE_NIFTI=OFF \
             $DEP_DIR_FLAGS
           cmake --build build -j"$(sysctl -n hw.ncpu)"
           cmake --install build
